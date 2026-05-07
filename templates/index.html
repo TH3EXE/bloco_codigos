@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Busca de Procedimentos</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; padding-top: 50px; background: #f4f7f6; }
+        .container { width: 80%; max-width: 600px; text-align: center; }
+        input { width: 100%; padding: 15px; font-size: 18px; border: 2px solid #ddd; border-radius: 8px; outline: none; }
+        input:focus { border-color: #007bff; }
+        #resultados { margin-top: 20px; text-align: left; background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .item { padding: 12px; border-bottom: 1px solid #eee; font-size: 16px; }
+        .item:last-child { border-bottom: none; }
+        .destaque { color: #007bff; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Localizador de Procedimentos</h2>
+    <input type="text" id="busca" placeholder="Digite o código, nome ou abreviação..." autocomplete="off">
+    <div id="resultados"></div>
+</div>
+
+<script>
+    const input = document.getElementById('busca');
+    const lista = document.getElementById('resultados');
+
+    input.addEventListener('input', async () => {
+        const termo = input.value;
+        
+        if (termo.length === 0) {
+            lista.innerHTML = ''; // Volta para a "tela inicial" (limpa)
+            return;
+        }
+
+        const response = await fetch(`/buscar?q=${encodeURIComponent(termo)}`);
+        const dados = await response.json();
+
+        lista.innerHTML = dados.map(item => `<div class="item">${item}</div>`).join('');
+    });
+</script>
+
+</body>
+</html>
